@@ -6,6 +6,7 @@ from gi.repository import Gtk, GLib, Gdk
 
 class EntryWindow(Gtk.Window):
     def __init__(self):
+        """Configuracio inicial de la finestra i els elements de la interficie"""
         # Configuracio inicial de la finestra
         Gtk.Window.__init__(self, title="Puzzle 2 - Display LCD")
         self.set_size_request(285, 235)
@@ -29,7 +30,7 @@ class EntryWindow(Gtk.Window):
         self.entry.set_wrap_mode(Gtk.WrapMode.WORD)
         self.entry.get_style_context().add_class("text-entry")
         self.entry_buffer = self.entry.get_buffer()
-        self.entry.set_size_request(249, 109)  # Limitem tamany visible
+        self.entry.set_size_request(249, 109)
         vbox.pack_start(self.entry, True, True, 0)
 
         # Afegim un boto per enviar el text
@@ -38,31 +39,31 @@ class EntryWindow(Gtk.Window):
         self.button.get_style_context().add_class("display-button")
         vbox.pack_start(self.button, False, False, 0)
 
-        # Connectem un event per limitar el text
+        # Connectem un esdeveniment per limitar el text
         self.entry_buffer.connect("changed", self.on_text_changed)
 
     def on_button_clicked(self, widget):
-        # Enviem el text del quadre al LCD
-        texto = self.entry_buffer.get_text(self.entry_buffer.get_start_iter(), self.entry_buffer.get_end_iter(), True)
-        mostrar_text_lcd(texto)
-        print("Texto enviado al LCD:\n", texto)
+        """Obte el texto del TextView i lenvia al LCD."""
+        text = self.entry_buffer.get_text(self.entry_buffer.get_start_iter(), self.entry_buffer.get_end_iter(), True)
+        mostrar_text_lcd(text)
+        print("Text enviat al LCD:\n", text)
 
     def on_text_changed(self, buffer):
-        # Limitem el text a 4 filas i 20 caracters per fila
-        texto = buffer.get_text(buffer.get_bounds()[0], buffer.get_bounds()[1], True)
+        """Limita el text a 4 filas i 20 caracters per fila"""
+        text = buffer.get_text(buffer.get_bounds()[0], buffer.get_bounds()[1], True)
 
-        lineas = texto.split("\n")
-        if len(lineas) > 4:
-            lineas = lineas[:4]
+        linies = text.split("\n")
+        if len(linies) > 4:
+            linies = linies[:4]
 
-        lineas = [linea[:20] for linea in lineas]
-        texto_limitado = "\n".join(lineas)
+        linies = [linia[:20] for linia in linies]
+        text_limitat = "\n".join(linies)
 
-        if texto != texto_limitado:
-            buffer.set_text(texto_limitado)
+        if text != text_limitat:
+            buffer.set_text(text_limitat)
 
     def set_css(self, css_file):
-        # Carreguem i apliquem estils CSS desde un fitxer
+        """Carrega i aplica estils CSS desde un fitxer"""
         css_provider = Gtk.CssProvider()
 
         with open(css_file, "rb") as css:
